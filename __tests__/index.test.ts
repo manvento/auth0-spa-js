@@ -88,6 +88,7 @@ const setup = async (
   const auth0 = callConstructor
     ? await createAuth0Client({
         domain: TEST_DOMAIN,
+        tokenPath: 'oauth',
         clientId: TEST_CLIENT_ID,
         ...clientOptions
       })
@@ -152,6 +153,7 @@ describe('Auth0', () => {
     it('should create an Auth0 client', async () => {
       const auth0 = await createAuth0Client({
         domain: TEST_DOMAIN,
+        tokenPath: 'oauth',
         clientId: TEST_CLIENT_ID
       });
 
@@ -188,6 +190,7 @@ describe('Auth0', () => {
 
       const auth0 = await createAuth0Client({
         domain: TEST_DOMAIN,
+        tokenPath: 'oauth',
         clientId: TEST_CLIENT_ID
       });
 
@@ -210,6 +213,7 @@ describe('Auth0', () => {
         utils.runIframe.mockRejectedValue({ error });
         const auth0 = await createAuth0Client({
           domain: TEST_DOMAIN,
+          tokenPath: 'oauth',
           clientId: TEST_CLIENT_ID
         });
         expect(auth0).toBeInstanceOf(Auth0Client);
@@ -227,7 +231,8 @@ describe('Auth0', () => {
 
       const auth0 = await createAuth0Client({
         domain: TEST_DOMAIN,
-        clientId: TEST_CLIENT_ID
+        clientId: TEST_CLIENT_ID,
+        tokenPath: 'oauth'
       });
 
       expect(cookieStorage.get).toHaveBeenCalledWith(
@@ -246,7 +251,8 @@ describe('Auth0', () => {
 
       const auth0 = await createAuth0Client({
         domain: TEST_DOMAIN,
-        clientId: TEST_CLIENT_ID
+        clientId: TEST_CLIENT_ID,
+        tokenPath: 'oauth'
       });
 
       expect(auth0.getTokenSilently).toHaveBeenCalledWith(undefined);
@@ -268,6 +274,7 @@ describe('Auth0', () => {
         const auth0 = await createAuth0Client({
           domain: TEST_DOMAIN,
           clientId: TEST_CLIENT_ID,
+          tokenPath: 'oauth',
           ...options
         });
 
@@ -294,6 +301,7 @@ describe('Auth0', () => {
         const auth0 = await createAuth0Client({
           domain: TEST_DOMAIN,
           clientId: TEST_CLIENT_ID,
+          tokenPath: 'oauth',
           ...options
         });
 

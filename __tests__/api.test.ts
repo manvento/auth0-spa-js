@@ -50,6 +50,7 @@ describe('oauthToken', () => {
       redirect_uri: 'http://localhost',
       grant_type: 'authorization_code',
       baseUrl: 'https://test.com',
+      tokenPath: 'oauth',
       client_id: 'client_idIn',
       code: 'codeIn',
       code_verifier: 'code_verifierIn',
@@ -97,6 +98,7 @@ describe('oauthToken', () => {
         redirect_uri: 'http://localhost',
         grant_type: 'authorization_code',
         baseUrl: 'https://test.com',
+        tokenPath: 'oauth',
         client_id: 'client_idIn',
         code: 'codeIn',
         code_verifier: 'code_verifierIn',
@@ -159,6 +161,7 @@ describe('oauthToken', () => {
     try {
       await oauthToken({
         baseUrl: 'https://test.com',
+        tokenPath: 'oauth',
         client_id: 'client_idIn',
         code: 'codeIn',
         code_verifier: 'code_verifierIn',
@@ -185,6 +188,7 @@ describe('oauthToken', () => {
     try {
       await oauthToken({
         baseUrl: 'https://test.com',
+        tokenPath: 'oauth',
         client_id: 'client_idIn',
         code: 'codeIn',
         code_verifier: 'code_verifierIn',
@@ -212,6 +216,7 @@ describe('oauthToken', () => {
     try {
       await oauthToken({
         baseUrl: 'https://test.com',
+        tokenPath: 'oauth',
         client_id: 'client_idIn',
         code: 'codeIn',
         code_verifier: 'code_verifierIn',
@@ -242,6 +247,7 @@ describe('oauthToken', () => {
 
     const result = await oauthToken({
       baseUrl: 'https://test.com',
+      tokenPath: 'oauth',
       client_id: 'client_idIn',
       code: 'codeIn',
       code_verifier: 'code_verifierIn',
@@ -260,6 +266,7 @@ describe('oauthToken', () => {
     await expect(
       oauthToken({
         baseUrl: 'https://test.com',
+        tokenPath: 'oauth',
         client_id: 'client_idIn',
         code: 'codeIn',
         code_verifier: 'code_verifierIn',
@@ -287,6 +294,7 @@ describe('oauthToken', () => {
     try {
       await oauthToken({
         baseUrl: 'https://test.com',
+        tokenPath: 'oauth',
         client_id: 'client_idIn',
         code: 'codeIn',
         code_verifier: 'code_verifierIn',
@@ -317,6 +325,7 @@ describe('oauthToken', () => {
 
     const result = await oauthToken({
       baseUrl: 'https://test.com',
+      tokenPath: 'oauth',
       client_id: 'client_idIn',
       code: 'codeIn',
       code_verifier: 'code_verifierIn',

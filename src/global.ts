@@ -122,6 +122,10 @@ export interface Auth0ClientOptions extends BaseLoginOptions {
    */
   domain: string;
   /**
+   * Internal path for OAUTH2.0 token requests. For auth0 is `'oauth'` (default value).
+   */
+  tokenPath: string;
+  /**
    * The issuer to be used for validation of JWTs, optionally defaults to the domain above
    */
   issuer?: string;

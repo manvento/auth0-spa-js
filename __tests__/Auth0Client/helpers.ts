@@ -114,6 +114,7 @@ export const setupFn = (mockVerify: jest.Mock) => {
   return (config?: Partial<Auth0ClientOptions>, claims?: Partial<IdToken>) => {
     const options: Auth0ClientOptions = {
       domain: TEST_DOMAIN,
+      tokenPath: 'oauth',
       clientId: TEST_CLIENT_ID,
       authorizationParams: {
         redirect_uri: TEST_REDIRECT_URI
