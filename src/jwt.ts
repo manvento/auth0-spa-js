@@ -36,6 +36,24 @@ const idTokendecoded = [
   'vtm'
 ];
 
+function diff(str1: string, str2: string): string {
+  const path1 = new URL(str1).pathname;
+  const path2 = new URL(str2).pathname;
+
+  const segments1 = path1.split("/").filter(segment => segment !== "");
+  const segments2 = path2.split("/").filter(segment => segment !== "");
+
+  const diffSegments = segments2.filter(segment => !segments1.includes(segment));
+
+  return diffSegments.join("/");
+}
+
+function isOauth2Difference(str1: string, str2: string): boolean {
+  const difference = diff(str1,str2);
+  return (!difference) || /\/?oauth2\/?/.test(difference);
+}
+
+
 export const decode = (token: string) => {
   const parts = token.split('.');
   const [header, payload, signature] = parts;
@@ -61,6 +79,7 @@ export const decode = (token: string) => {
 };
 
 export const verify = (options: JWTVerifyOptions) => {
+
   if (!options.id_token) {
     throw new Error('ID token is required but missing');
   }
@@ -73,7 +92,7 @@ export const verify = (options: JWTVerifyOptions) => {
     );
   }
 
-  if (decoded.claims.iss !== options.iss) {
+  if (!isOauth2Difference(decoded.claims.iss, options.iss)) {
     throw new Error(
       `Issuer (iss) claim mismatch in the ID token; expected "${options.iss}", found "${decoded.claims.iss}"`
     );
