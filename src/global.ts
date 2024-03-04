@@ -78,10 +78,13 @@ export interface AuthorizationParams {
   connection?: string;
 
   /**
-   * The Id of an organization to log in to.
+   * The organization to log in to.
    *
-   * This will specify an `organization` parameter in your user's login request and will add a step to validate
-   * the `org_id` claim in your user's ID Token.
+   * This will specify an `organization` parameter in your user's login request.
+   *
+   * - If you provide an Organization ID (a string with the prefix `org_`), it will be validated against the `org_id` claim of your user's ID Token. The validation is case-sensitive.
+   * - If you provide an Organization Name (a string *without* the prefix `org_`), it will be validated against the `org_name` claim of your user's ID Token. The validation is case-insensitive.
+   *
    */
   organization?: string;
 
@@ -121,10 +124,6 @@ export interface Auth0ClientOptions extends BaseLoginOptions {
    * (when using [custom domains](https://auth0.com/docs/custom-domains))
    */
   domain: string;
-  /**
-   * Internal path for OAUTH2.0 token requests. For auth0 is `'oauth'` (default value).
-   */
-  tokenPath: string;
   /**
    * The issuer to be used for validation of JWTs, optionally defaults to the domain above
    */
@@ -260,6 +259,24 @@ export interface Auth0ClientOptions extends BaseLoginOptions {
    * **Note**: Using this improperly can potentially compromise the token validation.
    */
   nowProvider?: () => Promise<number> | number;
+
+  /**
+   * If provided, the SDK will load the token worker from this URL instead of the integrated `blob`. An example of when this is useful is if you have strict
+   * Content-Security-Policy (CSP) and wish to avoid needing to set `worker-src: blob:`. We recommend either serving the worker, which you can find in the module
+   * at `<module_path>/dist/auth0-spa-js.worker.production.js`, from the same host as your application or using the Auth0 CDN
+   * `https://cdn.auth0.com/js/auth0-spa-js/<version>/auth0-spa-js.worker.production.js`.
+   *
+   * **Note**: The worker is only used when `useRefreshTokens: true`, `cacheLocation: 'memory'`, and the `cache` is not custom.
+   */
+  workerUrl?: string;
+
+  tokenPath?:string;
+
+  tokenScope?:string;
+
+  authorizePath?:string;
+
+  logoutPath?:string;
 }
 
 /**
@@ -511,6 +528,7 @@ export interface AuthenticationResult {
  */
 export interface TokenEndpointOptions {
   baseUrl: string;
+  tokenPath: string;
   client_id: string;
   grant_type: string;
   timeout?: number;
@@ -555,7 +573,7 @@ export interface JWTVerifyOptions {
   nonce?: string;
   leeway?: number;
   max_age?: number;
-  organizationId?: string;
+  organization?: string;
   now?: number;
 }
 
@@ -592,11 +610,12 @@ export interface IdToken {
   at_hash?: string;
   c_hash?: string;
   acr?: string;
-  amr?: string;
+  amr?: string[];
   sub_jwk?: string;
   cnf?: string;
   sid?: string;
   org_id?: string;
+  org_name?: string;
   [key: string]: any;
 }
 

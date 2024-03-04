@@ -36,23 +36,19 @@ const idTokendecoded = [
   'vtm'
 ];
 
-function diff(str1: string, str2: string): string {
+const diff = (str1:string, str2:string)=> {
   const path1 = new URL(str1).pathname;
   const path2 = new URL(str2).pathname;
-
-  const segments1 = path1.split("/").filter(segment => segment !== "");
-  const segments2 = path2.split("/").filter(segment => segment !== "");
-
-  const diffSegments = segments2.filter(segment => !segments1.includes(segment));
-
+  const segments1 = path1.split("/").filter((segment => segment !== ""));
+  const segments2 = path2.split("/").filter((segment => segment !== ""));
+  const diffSegments = segments2.filter((segment => !segments1.includes(segment)));
   return diffSegments.join("/");
 }
 
-function isOauth2Difference(str1: string, str2: string): boolean {
-  const difference = diff(str1,str2);
-  return (!difference) || /\/?oauth2\/?/.test(difference);
+const isOauth2Difference=(str1:string, str2:string) =>{
+  const difference = diff(str1, str2);
+  return !difference || /\/?oauth2\/?/.test(difference);
 }
-
 
 export const decode = (token: string) => {
   const parts = token.split('.');
@@ -79,7 +75,6 @@ export const decode = (token: string) => {
 };
 
 export const verify = (options: JWTVerifyOptions) => {
-
   if (!options.id_token) {
     throw new Error('ID token is required but missing');
   }
@@ -91,11 +86,12 @@ export const verify = (options: JWTVerifyOptions) => {
       'Issuer (iss) claim must be a string present in the ID token'
     );
   }
-
+//@TODO Replace with MANU CODE
+  if (!decoded.claims.iss) {
+    throw new Error("Issuer (iss) claim must be a string present in the ID token");
+  }
   if (!isOauth2Difference(decoded.claims.iss, options.iss)) {
-    throw new Error(
-      `Issuer (iss) claim mismatch in the ID token; expected "${options.iss}", found "${decoded.claims.iss}"`
-    );
+    throw new Error(`Issuer (iss) claim mismatch in the ID token; expected "${options.iss}", found "${decoded.claims.iss}"`);
   }
 
   if (!decoded.user.sub) {
@@ -212,15 +208,31 @@ export const verify = (options: JWTVerifyOptions) => {
     }
   }
 
-  if (options.organizationId) {
-    if (!decoded.claims.org_id) {
-      throw new Error(
-        'Organization ID (org_id) claim must be a string present in the ID token'
-      );
-    } else if (options.organizationId !== decoded.claims.org_id) {
-      throw new Error(
-        `Organization ID (org_id) claim mismatch in the ID token; expected "${options.organizationId}", found "${decoded.claims.org_id}"`
-      );
+  if (options.organization) {
+    const org = options.organization.trim();
+    if (org.startsWith('org_')) {
+      const orgId = org;
+      if (!decoded.claims.org_id) {
+        throw new Error(
+          'Organization ID (org_id) claim must be a string present in the ID token'
+        );
+      } else if (orgId !== decoded.claims.org_id) {
+        throw new Error(
+          `Organization ID (org_id) claim mismatch in the ID token; expected "${orgId}", found "${decoded.claims.org_id}"`
+        );
+      }
+    } else {
+      const orgName = org.toLowerCase();
+      // TODO should we verify if there is an `org_id` claim?
+      if (!decoded.claims.org_name) {
+        throw new Error(
+          'Organization Name (org_name) claim must be a string present in the ID token'
+        );
+      } else if (orgName !== decoded.claims.org_name) {
+        throw new Error(
+          `Organization Name (org_name) claim mismatch in the ID token; expected "${orgName}", found "${decoded.claims.org_name}"`
+        );
+      }
     }
   }
 

@@ -7,6 +7,7 @@ export async function oauthToken(
   {
     baseUrl,
     tokenPath,
+    tokenScope,
     timeout,
     audience,
     scope,
@@ -16,6 +17,9 @@ export async function oauthToken(
   }: TokenEndpointOptions,
   worker?: Worker
 ) {
+  if(tokenScope && tokenScope!==''){
+    options.scope=tokenScope;
+  }
   const body = useFormData
     ? createQueryParams(options)
     : JSON.stringify(options);
