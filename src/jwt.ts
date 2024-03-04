@@ -86,7 +86,7 @@ export const verify = (options: JWTVerifyOptions) => {
       'Issuer (iss) claim must be a string present in the ID token'
     );
   }
-//@TODO Replace with MANU CODE
+
   if (!decoded.claims.iss) {
     throw new Error("Issuer (iss) claim must be a string present in the ID token");
   }
